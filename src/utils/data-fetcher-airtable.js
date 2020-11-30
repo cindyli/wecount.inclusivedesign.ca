@@ -77,5 +77,41 @@ module.exports = {
 				}
 			});
 		});
+	},
+
+	retrieveFromBase: async (baseName, noneEmptyFieldName) => {
+		return new Promise((resolve) => {
+			const results = [];
+
+			base(baseName).select({
+				view: "Grid view",
+				filterByFormula: "NOT({" + noneEmptyFieldName + "} = '')",
+			}).eachPage(function page(records, fetchNextPage) {
+				records.forEach(record => {
+					results.push({...{id: record.getId()}, ...record.fields});
+				});
+				fetchNextPage();
+			}, function done(err) {
+				if (err) {
+					console.error("Error reading " + baseName + " table from Airtable: ", err);
+					return;
+				}
+				else {
+					resolve(results);
+				}
+			});
+		});
+	},
+
+	literature: async () => {
+		return await module.exports.retrieveFromBase("Literature Summary", "title");
+	},
+
+	literatureCategories: async () => {
+		return await module.exports.retrieveFromBase("Learn Searchability", "category_id");
+	},
+
+	literatureTags: async () => {
+		return await module.exports.retrieveFromBase("Literature Tags", "slug");
 	}
 };

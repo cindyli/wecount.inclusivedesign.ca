@@ -1,0 +1,20 @@
+---
+permalink: literature.json
+---
+{
+	"literature": [
+	{%- for item in collections.literature %}
+		{{ item | dump | safe }}{% if not loop.last %},{% endif %}
+	{%- endfor %}
+	],
+	"categories": [
+	{%- for item in collections.literatureCategories %}
+		{{ item | dump | safe }}{% if not loop.last %},{% endif %}
+	{%- endfor %}
+	],
+	"tags": [
+	{%- for item in collections.literatureTags %}
+		{{ item | dump | safe }}{% if not loop.last %},{% endif %}
+	{%- endfor %}
+	]
+}

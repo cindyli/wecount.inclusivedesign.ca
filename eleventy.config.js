@@ -87,6 +87,26 @@ module.exports = function(eleventyConfig) {
 		return collectionTogo;
 	});
 
+	eleventyConfig.addCollection("literature", async function() {
+		return dataFetcherAirtable.literature();
+	});
+
+	eleventyConfig.addCollection("literatureCategories", async function() {
+		const categories = await dataFetcherAirtable.literatureCategories();
+		return categories.map(category => {
+			const restructured = {};
+			restructured[category.category_id] = {
+				"category": category.category,
+				"focus": category.focus
+			};
+			return restructured;
+		});
+	});
+
+	eleventyConfig.addCollection("literatureTags", async function() {
+		return dataFetcherAirtable.literatureTags();
+	});
+
 	// Add plugins.
 	eleventyConfig.addPlugin(errorOverlay);
 	eleventyConfig.addPlugin(pluginSass, {
